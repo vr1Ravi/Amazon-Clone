@@ -43,12 +43,13 @@
   flex-direction: column;
 }
 .header-option-line1 {
-  /* font-family: "Amazon Ember", Arial, sans-serif; */
-  font-size: 10px;
+  font-family: "Amazon Ember", Arial, sans-serif;
+  font-size: 14px;
 }
 .header-option-line2 {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
+  font-family: sans-serif;
 }
 .header-basket {
   display: flex;
