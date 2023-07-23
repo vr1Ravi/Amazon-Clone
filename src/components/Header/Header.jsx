@@ -1,20 +1,16 @@
 import SearchIcon from "@mui/icons-material/Search";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import ShoppingCartCheckoutTwoToneIcon from "@mui/icons-material/ShoppingCartCheckoutTwoTone";
 import "./Header.css";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import AddedProductContext from "../../AddedProductContext";
-import { auth } from "../../firebase";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { signOut } from "../../userSlice";
 const Header = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [addedProductState, _] = useContext(AddedProductContext);
-  // console.log(addedProductState);
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-  let user = userInfo?.email.split("@")[0];
-  const handleAuth = async () => {
-    (await user) && localStorage.removeItem("user");
-    await auth.signOut();
-    user = null;
+  const dispatch = useDispatch();
+  const addedProducts = useSelector((state) => state.addedProduct.value);
+  const userStatus = useSelector((state) => state.user.value);
+  const handleAuth = () => {
+    userStatus && dispatch(signOut(null));
   };
   return (
     <div className="header">
@@ -32,11 +28,13 @@ const Header = () => {
         <SearchIcon className="header-searchIcon" />
       </div>
       <div className="header-nav">
-        <Link to={!user && "/signin"}>
+        <Link to={!userStatus && "/signin"}>
           <div onClick={handleAuth} className="header-option">
-            <span className="header-option-line1">Hello, {user}</span>
+            <span className="header-option-line1">
+              Hello, {userStatus ? userStatus.email.split("@")[0] : "guest"}
+            </span>
             <span className="header-option-line2">
-              {user ? "Sign Out" : "Sign In"}
+              {userStatus ? "Sign Out" : "Sign In"}
             </span>
           </div>
         </Link>
@@ -46,9 +44,9 @@ const Header = () => {
         </div>
         <Link to="/checkout">
           <div className="header-basket">
-            <ShoppingBasketIcon />
+            <ShoppingCartCheckoutTwoToneIcon />
             <span className="header-basketCount header-option-line2">
-              {addedProductState.addProductCount}
+              {addedProducts.length}
             </span>
           </div>
         </Link>

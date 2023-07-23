@@ -1,18 +1,12 @@
 import "./Product.css";
-import AddedProductContext from "../../AddedProductContext";
-import { useContext } from "react";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../addedProductSlice";
 // eslint-disable-next-line react/prop-types
 const Product = ({ id, title, price, image, rating }) => {
-  let [addedProductState, setAddedProduct] = useContext(AddedProductContext);
+  const dispatch = useDispatch();
   const handleClick = () => {
-    let addedProduct = addedProductState.addedProduct;
-    addedProduct.push({ title, price, image, rating });
-    setAddedProduct({
-      ...addedProductState,
-      addProductCount: ++addedProductState.addProductCount,
-      addedProduct: addedProduct,
-    });
-    console.log(addedProductState.addedProduct);
+    console.log(addProduct);
+    dispatch(addProduct({ id, title, price, image, rating }));
   };
   return (
     <div id={id} className="product">

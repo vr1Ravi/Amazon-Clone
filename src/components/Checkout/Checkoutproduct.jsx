@@ -1,23 +1,11 @@
 import "./Checkoutproduct.css";
-import { useContext } from "react";
-import AddedProductContext from "../../AddedProductContext";
-
+import { useDispatch } from "react-redux";
+import { removeProduct } from "../../addedProductSlice";
 // eslint-disable-next-line react/prop-types
 const Checkoutproduct = ({ id, image, title, price, rating }) => {
-  const [addedProductState, setAddedProduct] = useContext(AddedProductContext);
-
+  const dispatch = useDispatch();
   const handleClick = (id) => {
-    console.log(id);
-    const filterdProduct = addedProductState.addedProduct.filter(
-      (product, idx) => idx !== id
-    );
-
-    setAddedProduct({
-      ...addedProductState,
-      addedProduct: filterdProduct,
-      addProductCount: filterdProduct.length,
-    });
-    console.log(addedProductState.addedProduct);
+    dispatch(removeProduct(id));
   };
   return (
     <div className="checkoutproduct">

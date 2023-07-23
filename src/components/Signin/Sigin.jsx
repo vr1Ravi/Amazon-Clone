@@ -1,33 +1,46 @@
 import { Link } from "react-router-dom";
 import "./Sigin.css";
 import { useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { signin } from "../../userSlice";
+import { useDispatch } from "react-redux";
+
 const Sigin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   const sigIn = (e) => {
     //Firesbae login
     e.preventDefault();
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        auth && navigate("/");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredintial) => {
+        // console.log(userCredintial.user);
+        dispatch(signin(userCredintial.user));
       })
       .catch((error) => alert(error.message));
+    navigate("/");
   };
   const regiter = (e) => {
     //Firesbae register
     e.preventDefault();
 
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        console.log(auth);
-        auth && navigate("/");
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        console.log(userCredential.user);
+        // ...
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => {
+        console.log(error.code);
+        // ..
+      });
+    navigate("/");
   };
   return (
     <div className="signin">

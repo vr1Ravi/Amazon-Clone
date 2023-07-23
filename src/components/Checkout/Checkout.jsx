@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
 import Subtotal from "./Subtotal";
 import "./Checkout.css";
-import AddedProductContext from "../../AddedProductContext";
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import Checkoutproduct from "./Checkoutproduct";
 import Header from "../Header/Header";
 const Checkout = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [addedProductState, _] = useContext(AddedProductContext);
+  const addedProducts = useSelector((state) => state.addedProduct.value);
 
   return (
     <>
@@ -26,8 +24,8 @@ const Checkout = () => {
           <div>
             <h2 className="checkout-title">Your Shopping Basket</h2>
             {/* Basket */}
-            {addedProductState &&
-              addedProductState.addedProduct.map((product, idx) => (
+            {addedProducts &&
+              addedProducts.map((product, idx) => (
                 <Checkoutproduct
                   key={idx}
                   id={idx}
