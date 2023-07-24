@@ -5,11 +5,14 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../userSlice";
+import { signOut as signOutUser } from "firebase/auth";
+import { auth } from "../../firebase";
 const Header = () => {
   const dispatch = useDispatch();
   const addedProducts = useSelector((state) => state.addedProduct.value);
   const userStatus = useSelector((state) => state.user.value);
   const handleAuth = () => {
+    signOutUser(auth);
     userStatus && dispatch(signOut(null));
   };
   return (

@@ -7,6 +7,12 @@ import Sigin from "./components/Signin/Sigin";
 import { auth } from "./firebase";
 import { Provider } from "react-redux";
 import store from "./reduxStore";
+import Payment from "./components/Payment/Payment";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+const promise = loadStripe(
+  "pk_test_51NXOCsSDqDdFPhppgMHIanqVYKcv20tIohu1eILeqvfigFYRfpVJPrwJx6771BCzgG2DD3o2rY5KohEx07vAAdxw00tpxYqNpa"
+);
 const App = () => {
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -21,6 +27,15 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/signin" element={<Sigin />} />
             <Route path="/checkout" element={<Checkout />} />
+
+            <Route
+              path="/payment"
+              element={
+                <Elements stripe={promise}>
+                  <Payment />{" "}
+                </Elements>
+              }
+            />
           </Routes>
         </div>
       </Provider>

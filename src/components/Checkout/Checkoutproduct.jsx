@@ -1,6 +1,7 @@
 import "./Checkoutproduct.css";
 import { useDispatch } from "react-redux";
 import { removeProduct } from "../../addedProductSlice";
+
 // eslint-disable-next-line react/prop-types
 const Checkoutproduct = ({ id, image, title, price, rating }) => {
   const dispatch = useDispatch();

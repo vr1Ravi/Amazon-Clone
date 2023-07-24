@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { signin } from "../../userSlice";
@@ -14,17 +15,23 @@ const Sigin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const sigIn = (e) => {
     //Firesbae login
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredintial) => {
+      .then((userCredential) => {
         // console.log(userCredintial.user);
-        dispatch(signin(userCredintial.user));
+        if (userCredential) {
+          dispatch(signin(userCredential.user));
+          navigate("/");
+        }
       })
-      .catch((error) => alert(error.message));
-    navigate("/");
+      .catch((error) => {
+        // error.code == "auth/invalid-email" && alert(error.code.split("/")[1]);
+        setError(error.code);
+      });
   };
   const regiter = (e) => {
     //Firesbae register
@@ -33,8 +40,12 @@ const Sigin = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        console.log(userCredential.user);
-        // ...
+        if (userCredential) {
+          dispatch(signin(userCredential.user));
+          navigate("/");
+        } else {
+          alert("Don't have an account create one");
+        }
       })
       .catch((error) => {
         console.log(error.code);
@@ -51,20 +62,28 @@ const Sigin = () => {
           alt="logo"
         />
       </Link>
+      {error && (
+        <div className="wrongSignIn">
+          <WarningAmberIcon />
+          <p>We cannot find an account with that email address</p>
+        </div>
+      )}
       <div className="login-box">
         <h1>Sign in</h1>
         <form>
           <h5>Email</h5>
           <input
-            type="text"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <h5>Password</h5>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <button className="signin-button" type="submit" onClick={sigIn}>
             continue

@@ -5,7 +5,6 @@ import { addProduct } from "../../addedProductSlice";
 const Product = ({ id, title, price, image, rating }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
-    console.log(addProduct);
     dispatch(addProduct({ id, title, price, image, rating }));
   };
   return (

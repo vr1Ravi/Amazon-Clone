@@ -4,6 +4,7 @@ import "./Checkout.css";
 import { useSelector } from "react-redux";
 import Checkoutproduct from "./Checkoutproduct";
 import Header from "../Header/Header";
+
 const Checkout = () => {
   const addedProducts = useSelector((state) => state.addedProduct.value);
 
@@ -22,8 +23,9 @@ const Checkout = () => {
           </Link>
 
           <div>
-            <h2 className="checkout-title">Your Shopping Basket</h2>
+            <h2 className="checkout-title">Shopping Cart</h2>
             {/* Basket */}
+
             {addedProducts &&
               addedProducts.map((product, idx) => (
                 <Checkoutproduct
