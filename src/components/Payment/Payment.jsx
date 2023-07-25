@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import axios from "../../axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { emptyBasket } from "../../addedProductSlice";
 const Payment = () => {
   const user = useSelector((state) => state.user.value);
   const addedProducts = useSelector((state) => state.addedProduct.value);
@@ -19,21 +21,21 @@ const Payment = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const total = addedProducts.reduce(
     (accumulator, item) => accumulator + parseFloat(item.price),
     0
   );
   useEffect(() => {
     async function getClientSecret() {
-      const res = await axios({
-        method: "post",
-        url: `/paymets/create?total=?${total * 100}`,
-      });
+      const res =
+        total != 0 &&
+        (await axios.post(`/payments/create?total=${total * 100}`));
       setClientSecret(res.data.clientSecret);
     }
     getClientSecret();
   }, [addedProducts]);
-
+  console.log("The secret is >>>", clientSecret);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
@@ -45,10 +47,12 @@ const Payment = () => {
       })
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
+
         setSucceeded(true);
         setError(null);
         setProcessing(false);
-        navigate("/orders");
+        dispatch(emptyBasket([]));
+        navigate("/orders", { replace: true });
       });
   };
   const handleChange = (e) => {

@@ -12,8 +12,12 @@ export const addedProductSlice = createSlice({
     removeProduct: (state, action) => {
       state.value = state.value.filter((item, idx) => idx !== action.payload);
     },
+    emptyBasket: (state, action) => {
+      state.value = action.payload;
+    },
   },
 });
 
-export const { addProduct, removeProduct } = addedProductSlice.actions;
+export const { addProduct, removeProduct, emptyBasket } =
+  addedProductSlice.actions;
 export default addedProductSlice.reducer;
