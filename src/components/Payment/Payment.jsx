@@ -10,6 +10,8 @@ import axios from "../../axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { emptyBasket } from "../../addedProductSlice";
+import { db } from "../../firebase";
+import { collection, setDoc, doc } from "firebase/firestore";
 const Payment = () => {
   const user = useSelector((state) => state.user.value);
   const addedProducts = useSelector((state) => state.addedProduct.value);
@@ -45,8 +47,21 @@ const Payment = () => {
           card: elements.getElement(CardElement),
         },
       })
-      .then(({ paymentIntent }) => {
+      .then(async ({ paymentIntent }) => {
         // paymentIntent = payment confirmation
+        console.log(paymentIntent);
+        const paymentRef = doc(
+          db,
+          "users",
+          user?.uid,
+          "orders",
+          paymentIntent.id
+        );
+        await setDoc(paymentRef, {
+          basket: addedProducts,
+          amount: paymentIntent.amount,
+          created: paymentIntent.created,
+        });
 
         setSucceeded(true);
         setError(null);
